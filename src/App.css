@@ -1,0 +1,309 @@
+
+@import "tailwindcss";
+@plugin "../node_modules/daisyui";
+
+@import '@assets/css/common.css';
+@import "./assets/fonts/Paperlogy.css";
+/* ===== CSS Reset 문법 추가는 가능하나, 내용은 수정 금지 =====*/
+@font-face {
+  font-family: 'GriunFont'; 
+  src: url('./assets/fonts/Griun_PolSensibility-Rg.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* theme 블록들은 한곳에 모으는 것이 관리하기 좋습니다 */
+@theme {
+  --color-secondary : #009277;
+  --color-primary: #0F9B73;                               /* 메인 컬러 및 폰트 등록 */
+  --color-brand-green: #0F9B73;
+  --color-brand-green-content: #ffffff;
+  --font-griun: 'GriunFont', sans-serif;
+  --animate-slidedown: slideDown 0.3s ease-out forwards;  /* 검색창 애니메이션 등록 */
+}
+
+@layer utilities {
+  .input, .select {
+    &:focus, &:focus-within {
+        outline: 0px solid var(--input-color);
+        outline-offset: 0px;
+        isolation: isolate;
+    }
+  }
+
+
+  .input {
+    max-width: none;
+    width: 100%;
+  }
+
+  .select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7' /%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2rem;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* 선택되었을 때 (옵션창이 뜰 때 시각적 피드백) */
+  .select.is-open {
+    outline: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 15l7-7 7 7' /%3E%3C/svg%3E");
+  }
+
+
+  .input-secondary {
+    --input-color: var(--color-secondary);
+    @apply input border-gray-200;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+  }
+
+  /* select도 input과 동일하게 핑크색 제거 및 초록색 테마 적용 */
+  .select-secondary {
+    @apply select border-gray-200;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+
+    &:focus, &:focus-within {
+      border-color: #0F9B73 !important;
+      box-shadow: 0 0 0 3px color-mix(in srgb, #0F9B73, transparent 85%) !important;
+    }
+  }
+
+  /* 2. 초록색 통합 유틸리티 (Hover + Focus) */
+  .board-hover-green {
+    /* 마우스를 올렸을 때 (호버) */
+    &:hover {
+      border-color: #0F9B73 !important;
+    }
+
+    /* 클릭해서 입력 중일 때 (포커스) */
+    &:focus, &:focus-within {
+      border-color: #0F9B73 !important;
+      box-shadow: 0 0 0 2px color-mix(in srgb, #0F9B73, transparent 85%) !important;
+      background-color: #ffffff;
+    }
+  }
+
+
+  
+    
+  .btn-darkgray {
+    @apply btn bg-gray-500 text-white hover:bg-gray-600;
+  }
+
+  
+  .btn-green {
+    @apply btn;
+    --btn-bg: var(--color-brand-green);
+    --btn-border: var(--color-brand-green);
+    --btn-color: var(--color-brand-green-content);
+
+    background-color: var(--btn-bg);
+    border-color: var(--btn-border);
+    color: var(--btn-color) !important;
+
+    &:hover {
+      --btn-bg: color-mix(in srgb, var(--color-brand-green), black 15%);
+      --btn-border: color-mix(in srgb, var(--color-brand-green), black 15%);
+      
+      background-color: var(--btn-bg);
+      border-color: var(--btn-border);
+    }
+  }
+}
+
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.counter {
+  font-size: 16px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+  margin-bottom: 24px;
+
+  &:hover {
+    border-color: var(--accent-border);
+  }
+  &:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+.hero {
+  position: relative;
+
+  .base,
+  .framework,
+  .vite {
+    inset-inline: 0;
+    margin: 0 auto;
+  }
+
+  .base {
+    width: 170px;
+    position: relative;
+    z-index: 0;
+  }
+
+  .framework,
+  .vite {
+    position: absolute;
+  }
+
+  .framework {
+    z-index: 1;
+    top: 34px;
+    height: 28px;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
+      scale(1.4);
+  }
+
+  .vite {
+    z-index: 0;
+    top: 107px;
+    height: 26px;
+    width: auto;
+    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
+      scale(0.8);
+  }
+}
+
+#center {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  place-content: center;
+  place-items: center;
+  flex-grow: 1;
+
+  @media (max-width: 1024px) {
+    padding: 32px 20px 24px;
+    gap: 18px;
+  }
+}
+
+#next-steps {
+  display: flex;
+  border-top: 1px solid var(--border);
+  text-align: left;
+
+  & > div {
+    flex: 1 1 0;
+    padding: 32px;
+    @media (max-width: 1024px) {
+      padding: 24px 20px;
+    }
+  }
+
+  .icon {
+    margin-bottom: 16px;
+    width: 22px;
+    height: 22px;
+  }
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+#docs {
+  border-right: 1px solid var(--border);
+
+  @media (max-width: 1024px) {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+#next-steps ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 8px;
+  margin: 32px 0 0;
+
+  .logo {
+    height: 18px;
+  }
+
+  a {
+    color: var(--text-h);
+    font-size: 16px;
+    border-radius: 6px;
+    background: var(--social-bg);
+    display: flex;
+    padding: 6px 12px;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: box-shadow 0.3s;
+
+    &:hover {
+      box-shadow: var(--shadow);
+    }
+    .button-icon {
+      height: 18px;
+      width: 18px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    li {
+      flex: 1 1 calc(50% - 8px);
+    }
+
+    a {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+  }
+}
+
+#spacer {
+  height: 88px;
+  border-top: 1px solid var(--border);
+  @media (max-width: 1024px) {
+    height: 48px;
+  }
+}
+
+.ticks {
+  position: relative;
+  width: 100%;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: -4.5px;
+    border: 5px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-left-color: var(--border);
+  }
+  &::after {
+    right: 0;
+    border-right-color: var(--border);
+  }
+}
