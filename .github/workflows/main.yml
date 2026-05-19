@@ -73,8 +73,8 @@ jobs:
           script: |
               DEPLOY_PATH="${{ secrets.OCI_DEPLOY_PATH }}"
             
-              # /tmp에 다운로드 (-q 제거해서 에러 표시)
-              wget \
+              # /tmp에 다운로드
+              wget -q \
                 --header="Authorization: token ${{ secrets.GH_PAT }}" \
                 --header="Accept: application/octet-stream" \
                 "https://github.com/${{ github.repository }}/releases/download/front-deploy-latest/dist.tar.gz" \
