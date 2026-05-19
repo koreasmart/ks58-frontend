@@ -99,7 +99,22 @@ jobs:
           username: ${{ secrets.OCI_USER }}
           key: ${{ secrets.KSMARTDEV }}
           script: |
-            rm -rf ${{ secrets.OCI_DEPLOY_PATH }}/dist/*
+            DEPLOY_PATH="${{ secrets.OCI_DEPLOY_PATH }}"
+            
+            # 변수 비어있으면 즉시 종료
+            if [ -z "$DEPLOY_PATH" ]; then
+              echo "DEPLOY_PATH is empty. Abort!"
+              exit 1
+            fi
+            
+            # 디렉토리 존재 여부 확인
+            if [ ! -d "$DEPLOY_PATH/dist" ]; then
+              echo "Directory not found. Abort!"
+              exit 1
+            fi
+            
+            # dist 안의 내용만 삭제
+            find "$DEPLOY_PATH/dist" -mindepth 1 -delete
 
       # 9. dist 폴더 내용을 원격 서버(OCI 등)로 복사 (배포)
       - name: Transfer dist directory to the Server
