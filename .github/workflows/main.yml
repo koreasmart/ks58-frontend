@@ -71,36 +71,24 @@ jobs:
           username: ${{ secrets.OCI_USER }}
           key: ${{ secrets.KSMARTDEV }}
           script: |
-            DEPLOY_PATH="${{ secrets.OCI_DEPLOY_PATH }}"
-
-            # 경로 체크
-            if [ -z "$DEPLOY_PATH" ]; then
-              echo "DEPLOY_PATH is empty. Abort!"
-              exit 1
-            fi
-
-            if [ ! -d "$DEPLOY_PATH/dist" ]; then
-              echo "Directory not found. Abort!"
-              exit 1
-            fi
-
-            # 기존 dist 내용 삭제
-            find "$DEPLOY_PATH/dist" -mindepth 1 -delete
-
-            # GitHub Release에서 직접 wget으로 다운로드
-            wget -q \
-              --header="Authorization: token ${{ secrets.GH_PAT }}" \
-              --header="Accept: application/octet-stream" \
-              "https://github.com/${{ github.repository }}/releases/download/front-deploy-latest/dist.tar.gz" \
-              -O "$DEPLOY_PATH/dist.tar.gz"
-
-            echo "다운로드 완료!"
-
-            # dist 폴더에 압축 해제
-            sudo tar -xzf "$DEPLOY_PATH/dist.tar.gz" -C "$DEPLOY_PATH/dist"
-
-            # 임시 파일 삭제
-            rm "$DEPLOY_PATH/dist.tar.gz"
-
-            echo "배포 완료!"
-            ls -lh "$DEPLOY_PATH/dist"
+              DEPLOY_PATH="${{ secrets.OCI_DEPLOY_PATH }}"
+            
+              # /tmp에 다운로드 (-q 제거해서 에러 표시)
+              wget \
+                --header="Authorization: token ${{ secrets.GH_PAT }}" \
+                --header="Accept: application/octet-stream" \
+                "https://github.com/${{ github.repository }}/releases/download/front-deploy-latest/dist.tar.gz" \
+                -O /tmp/dist.tar.gz || { echo "wget 실패!"; exit 1; }
+            
+              echo "다운로드 완료!"
+              ls -lh /tmp/dist.tar.gz
+            
+              # 기존 dist 내용 삭제
+              sudo find "$DEPLOY_PATH/dist" -mindepth 1 -delete
+            
+              # 압축 해제
+              sudo tar -xzf /tmp/dist.tar.gz -C "$DEPLOY_PATH/dist" || { echo "압축해제 실패!"; exit 1; }
+            
+              rm /tmp/dist.tar.gz
+              echo "배포 완료!"
+              ls -lh "$DEPLOY_PATH/dist"
