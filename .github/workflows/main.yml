@@ -97,7 +97,7 @@ jobs:
             echo "다운로드 완료!"
 
             # dist 폴더에 압축 해제
-            tar -xzf "$DEPLOY_PATH/dist.tar.gz" -C "$DEPLOY_PATH/dist"
+            sudo tar -xzf "$DEPLOY_PATH/dist.tar.gz" -C "$DEPLOY_PATH/dist"
 
             # 임시 파일 삭제
             rm "$DEPLOY_PATH/dist.tar.gz"
